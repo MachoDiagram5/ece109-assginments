@@ -1,4 +1,10 @@
-
+;Name: Curtis Chung
+;Submission date: 10/27/2022
+;Description of the Program: For this program the objective is to retrive 2 different numbers ranging from 0-99
+;                               and compare the 2 numbers and determine which is greater.
+;                               when reciving the two numbers the code will check each input idividually to be sure it
+;                               it is a valid entry. The next step is with the two values it compares the two indivual then
+;                               outputs the value of the largest number.
 .ORIG x3000
 TOP2    AND R0, R0, #0 ;clear memory
         AND R1, R1, #0
@@ -47,7 +53,7 @@ TOP2    AND R0, R0, #0 ;clear memory
         AND R2, R2, #0        
         LD R2, NEGNEWLINE
         ADD R1, R2, R0
-        BRz STDGT1; TEMPARARRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRY
+        BRz STDGT1      ;store digit 1
 
         ;CHECK IF IT IS LESS THAN ZERO
         AND R1, R1, #0
@@ -158,7 +164,7 @@ SKIP1   AND R0, R0, #0 ;clear memory
         AND R2, R2, #0        
         LD R2, NEGNEWLINE
         ADD R1, R2, R0
-        BRz STDGT2; TEMPARARRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRY
+        BRz STDGT2      ;store digit 1
 
         ;CHECK IF IT IS LESS THAN ZERO
         AND R1, R1, #0
@@ -256,36 +262,57 @@ SKIP2   LEA R0, STRING4
         ADD R1, R1, #1 ;CONFIGURE TO 2S COMPLIMENT
         ADD R2, R5, R1  ;SUBTRACT R5 AND R6 TO R1
 
-        BRn R6BIN;if negative r6 is bigger OR R5 AND R6 ARE EQUAL TO EACH OTHER
-        BRzp R5BIN;if positive r5 is bigger
+        BRn R6BIN;if negative r6 is bigger 
+        BRp R5BIN;if positive r5 is bigger
+        BRz ZSKIP; if zero R5 AND R6 ARE EQUAL TO EACH OTHER
 
+
+;IF VALUE IS BIGGER IN R6
 R6BIN   ADD R3, R3, #1          ;R3 IS 10S AND R6 IS 1S
         ADD R6, R6, #-10
         BRp R6BIN
+        BRz TSKIP1
         ADD R3, R3, #-1
         ADD R6, R6, #10
 
-        LD R4, ASCIIZERO        ;output the answer
+ TSKIP1 LD R4, ASCIIZERO        ;output the answer
         ADD R0, R3, R4          ;asciizero = #48
         OUT
         ADD R0, R6, R4
         OUT
-
         BRnzp TOP
 
+
+;IF VALUE IS BIGGER IN R5
 R5BIN   ADD R3, R3, #1          ;R3 IS 10S AND R6 IS 1S
         ADD R5, R5, #-10
         BRp R5BIN
+        BRz TSKIP2
         ADD R3, R3, #-1
         ADD R5, R5, #10
-
-        LD R4, ASCIIZERO        ;OUTPUT THE ANSWER
+        
+TSKIP2  LD R4, ASCIIZERO        ;OUTPUT THE ANSWER
         ADD R0, R3, R4
         OUT
         ADD R0, R5, R4
         OUT
-
         BRnzp TOP
+
+
+;IF VALUE IS SAME
+ZSKIP   ADD R3, R3, #1          ;R3 IS 10S AND R6 IS 1S
+        ADD R5, R5, #-10
+        BRp ZSKIP
+        BRz TSKIP3
+        ADD R3, R3, #-1
+        ADD R5, R5, #10
+        
+TSKIP3  LD R4, ASCIIZERO        ;OUTPUT THE ANSWER
+        ADD R0, R5, R4
+        OUT
+        BRnzp TOP
+
+
 
 ENDIT3  LEA R0, STRING3
         PUTS
